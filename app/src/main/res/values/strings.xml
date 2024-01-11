@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">APK Pemesanan</string>
+    <string name="toast_message">Hello Zacky:)</string>
+    toast.show();
+</resources>
