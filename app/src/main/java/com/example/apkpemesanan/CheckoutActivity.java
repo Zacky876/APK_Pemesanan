@@ -113,7 +113,7 @@ public class CheckoutActivity extends AppCompatActivity {
 
         Log.d("AAAAAAAAAAAA", id_transaksi);
 
-        AndroidNetworking.get("https://192.168.1.12/ta/invoice.php?id_transaksi"+ id_transaksi)
+        AndroidNetworking.get("https://192.168.101.122/ta/invoice.php?id_transaksi"+ id_transaksi)
                 .setTag("test")
                 .setPriority(Priority.MEDIUM)
                 .build()

@@ -47,7 +47,7 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter, adapter2;
-    private RecyclerView recyclerViewCategoryList, recyclerViewPopularList;
+    private RecyclerView recyclerViewPopularList;
     private ArrayList<FoodDomain> foodList;
 
     private ProgressDialog progressDialog;
@@ -64,16 +64,16 @@ public class MainActivity extends AppCompatActivity {
 //        fetchDataFromServer();
 
 
-        double nilaiMataUang = 20000.0;
-
-        DecimalFormat decimalFormat = new DecimalFormat("#.000");
-
-        String tampilanMataUang = decimalFormat.format(nilaiMataUang);
-
-        View recommendLayout = getLayoutInflater().inflate(R.layout.viewholder_recommend, null);
-
-        TextView textViewMataUang = recommendLayout.findViewById(R.id.fee);
-        textViewMataUang.setText(tampilanMataUang);
+//        double nilaiMataUang = 20000.0;
+//
+//        DecimalFormat decimalFormat = new DecimalFormat("#.000");
+//
+//        String tampilanMataUang = decimalFormat.format(nilaiMataUang);
+//
+//        View recommendLayout = getLayoutInflater().inflate(R.layout.viewholder_recommend, null);
+//
+//        TextView textViewMataUang = recommendLayout.findViewById(R.id.fee);
+//        textViewMataUang.setText(tampilanMataUang);
 
 //        EditText search = findViewById(R.id.search);
 //        search.addTextChangedListener(new TextWatcher() {
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.show();
         MainActivity activity = this;
 
-        AndroidNetworking.get("http://192.168.122.252/ta/tampil.php")
+        AndroidNetworking.get("http://192.168.101.122/ta/tampil.php")
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                             e.printStackTrace();
                             progressDialog.dismiss();
                         }
-//                        adapter.notifyDataSetChanged();
+                        adapter2.notifyDataSetChanged();
                     }
                     @Override
                     public void onError(ANError error) {
@@ -151,12 +151,6 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
-
-//        foodList.add(new FoodDomain("Pepperoni pizza", "pizza1", "ini makanan enak tetapi mengandung kalori yg sangat banyak", 20000, 5, 20, 1000));
-//        foodList.add(new FoodDomain("Chesse Burger", "burger", "ini makanan enak tetapi mengandung kalori yg sangat banyak", 15000, 4, 10, 500));
-//        foodList.add(new FoodDomain("Vagetable pizza", "pizza3", "ini makanan enak tetapi mengandung kalori yg sangat banyak",25000, 4, 20, 900));
-
-
     }
 
 //    private void recyclerViewCategory() {

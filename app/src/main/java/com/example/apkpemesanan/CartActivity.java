@@ -75,7 +75,7 @@ public class CartActivity extends AppCompatActivity {
         });
 
         // Permintaan ke API PHP untuk mendapatkan data nomor meja yang diperlukan
-        AndroidNetworking.get("http://192.168.122.252/ta/nomor_meja.php")
+        AndroidNetworking.get("http:// 192.168.244.91/ta/nomor_meja.php")
                 .setPriority(Priority.MEDIUM)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -127,7 +127,7 @@ public class CartActivity extends AppCompatActivity {
             for(int i=0; i<cartList.size(); i++)
                 total_harga += (cartList.get(i).getFee() * cartList.get(i).getNumberInCart());
 
-            AndroidNetworking.post("http://192.168.122.252/ta/checkout.php") // Ganti dengan URL API yang benar
+            AndroidNetworking.post("http://192.168.101.122/ta/checkout.php") // Ganti dengan URL API yang benar
                     .setPriority(Priority.MEDIUM)
                     .addBodyParameter("nomor_meja", String.valueOf(spinner.getSelectedItemPosition() + 1))
                     .addBodyParameter("total_pembayaran", String.valueOf(total_harga))
@@ -138,7 +138,7 @@ public class CartActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             managementCart.getListCart().forEach(tes -> {
-                                AndroidNetworking.get("http://192.168.122.252/ta/order.php?nama_menu="+tes+"&jumlah_menu="+tes.getNumberInCart()+"&subtotal="+(tes.getFee() * tes.getNumberInCart())+"&nomor_meja=" + (spinner.getSelectedItemPosition() + 1)) // Ganti dengan URL API yang benar
+                                AndroidNetworking.get("http://192.168.101.122/ta/order.php?nama_menu="+tes+"&jumlah_menu="+tes.getNumberInCart()+"&subtotal="+(tes.getFee() * tes.getNumberInCart())+"&nomor_meja=" + (spinner.getSelectedItemPosition() + 1)) // Ganti dengan URL API yang benar
                                         .setPriority(Priority.MEDIUM)
                                         .setTag("CHECKOUT DETAIL")
                                         .build()
