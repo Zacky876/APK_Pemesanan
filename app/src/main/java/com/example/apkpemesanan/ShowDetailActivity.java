@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +25,8 @@ private TextView addTocart, title, fee, description, numOrder, totalprice, star,
 private ImageView plusbtn, minusbtn, picfood;
 private FoodDomain foodDomain;
 private int numberOrder = 1;
+private LinearLayout Lnotif;
+private Button btnotif;
 private ManagementCart managementCart;
     @SuppressLint("SetTextI18n")
     @Override
@@ -33,6 +39,23 @@ private ManagementCart managementCart;
         initView();
         getbundle();
         bottomNavigation();
+
+    }
+
+    private void cartnotifycation() {
+        Lnotif.setVisibility(View.VISIBLE);
+        Lnotif.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_up));
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Lnotif.clearAnimation();
+            Lnotif.setVisibility(View.GONE);
+        },2000);
+
+        Lnotif.setOnClickListener(view -> Lnotif.setVisibility(View.GONE));
+
+        btnotif.setOnClickListener(view -> {
+            startActivity(new Intent(ShowDetailActivity.this, CartActivity.class));
+        });
     }
 
     private void bottomNavigation() {
@@ -57,7 +80,8 @@ private ManagementCart managementCart;
 //            Glide.with(this)
 //                    .load(drawableResourceId)
 //                    .into(picfood);
-            Picasso.get().load(foodDomain.getPic()).into(picfood);
+            Picasso.get().load("http://10.0.2.2:8000/gambar?id_gambar=" + foodDomain.getPic()).into(picfood);
+
 
 
             title.setText(foodDomain.getTitle());
@@ -93,15 +117,12 @@ private ManagementCart managementCart;
            }
        });
 
-        addTocart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               foodDomain.setNumberInCart(numberOrder);
-               managementCart.insertfood(foodDomain);
-            }
+        addTocart.setOnClickListener(view -> {
+            foodDomain.setNumberInCart(numberOrder);
+            managementCart.insertfood(foodDomain);
+            cartnotifycation();
         });
     }
-
 
     private void initView() {
 
@@ -114,6 +135,9 @@ private ManagementCart managementCart;
         minusbtn = findViewById(R.id.minusCartbtn);
         picfood = findViewById(R.id.foodpic);
         totalprice = findViewById(R.id.totalPrice);
+
+        Lnotif = findViewById(R.id.cartNotification);
+        btnotif = findViewById(R.id.cartNotificationButton);
 //        star = findViewById(R.id.star);
 //        time = findViewById(R.id.time);
 //        calory = findViewById(R.id.calories);
