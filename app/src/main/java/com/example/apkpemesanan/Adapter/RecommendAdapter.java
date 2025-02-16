@@ -2,11 +2,14 @@ package com.example.apkpemesanan.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,13 +22,16 @@ import com.example.apkpemesanan.ShowDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.ViewHolder> {
+public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.ViewHolder> implements Filterable {
     ArrayList<FoodDomain> RecommendDomains;
+    ArrayList<FoodDomain> RecommendDomainsFull;
     MainActivity activity;
 
     public RecommendAdapter(ArrayList<FoodDomain> categoryDomains, MainActivity activity) {
         this.RecommendDomains = categoryDomains;
+        this.RecommendDomainsFull = new ArrayList<>(categoryDomains);
         this.activity = activity;
     }
 
@@ -43,27 +49,18 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.View
         holder.fee.setText(String.valueOf(RecommendDomains.get(position).getFee()));
 
 
-        Picasso.get().load(RecommendDomains.get(position).getPic()).into(holder.pic);
-//
-//        int drawableReourceId = holder.itemView.getContext().getResources()
-//                .getIdentifier(RecommendDomains.get(position).getPic(), "drawable",
-//                        holder.itemView.getContext().getPackageName());
-
-//        Glide.with(holder.itemView.getContext()).load(drawableReourceId).into(holder.pic);
+        Picasso.get().load("http://10.0.2.2:8000/gambar?id_gambar=" + RecommendDomains.get(position).getPic()).into(holder.pic);
 
         holder.addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 Intent intent = new Intent(activity, ShowDetailActivity.class);
-//            Log.d("TES", RecommendDomains.get(position).toString());
                 intent.putExtra("fooddomain", RecommendDomains.get(position));
-//                activity.getApplication().startActivity(intent);
                 holder.itemView.getContext().startActivity(intent);
             }
         });
     }
-
     @Override
     public int getItemCount() {
         return RecommendDomains.size();
@@ -82,5 +79,60 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.View
             fee = itemview.findViewById(R.id.fee);
             addbtn = itemview.findViewById(R.id.addbtn);
         }
+    }
+    public void updateData(ArrayList<FoodDomain> newData) {
+        this.RecommendDomains.clear();
+        this.RecommendDomains.addAll(newData);
+        this.RecommendDomainsFull.clear();
+        this.RecommendDomainsFull.addAll(newData);
+        notifyDataSetChanged();
+    }
+
+    public List<FoodDomain> getFilteredItems(String query) {
+        List<FoodDomain> filteredList = new ArrayList<>();
+        for (FoodDomain item : RecommendDomainsFull) {
+            if (item.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+        return filteredList;
+    }
+
+    public void updateList(List<FoodDomain> newList) {
+        Log.d("SearchDebug", "Updating List with: " + newList.size() + " items");
+        RecommendDomains.clear();
+        RecommendDomains.addAll(newList);
+        notifyDataSetChanged();
+    }
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                List<FoodDomain> filteredList = new ArrayList<>();
+                if (constraint == null || constraint.length() == 0) {
+                    filteredList.addAll(RecommendDomainsFull);
+                } else {
+                    String filterPattern = constraint.toString().toLowerCase().trim();
+                    for (FoodDomain item : RecommendDomainsFull) {
+                        if (item.getTitle().toLowerCase().contains(filterPattern)) {
+                            filteredList.add(item);
+                        }
+                    }
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                RecommendDomains.clear();
+                if (results.values != null && results.values instanceof List) {
+                    RecommendDomains.addAll((List<FoodDomain>) results.values);
+                }
+                notifyDataSetChanged();
+            }
+        };
     }
 }

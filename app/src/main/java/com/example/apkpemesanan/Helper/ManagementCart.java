@@ -1,6 +1,7 @@
 package com.example.apkpemesanan.Helper;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.apkpemesanan.Domain.FoodDomain;
@@ -40,7 +41,8 @@ public class ManagementCart {
         }
 
         tinyDB.putListObject("CardList", listfood);
-        Toast.makeText(context, "Added to your cart", Toast.LENGTH_SHORT).show();
+        Log.d("LIST CART", "Isi list: " + getListCart().toString());
+
     }
 
     public ArrayList<FoodDomain> getListCart() {

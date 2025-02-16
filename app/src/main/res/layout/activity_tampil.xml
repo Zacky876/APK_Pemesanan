@@ -15,16 +15,9 @@
       android:gravity="center"
       android:text="PESANAN ANDA TELAH DIPROSES \n silahkan menunggu "
       android:textSize="24sp"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
-  <TextView
-      android:id="@+id/textView9"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="48dp"
-      android:text="Id_transaksi: "
-      app:layout_constraintStart_toStartOf="@+id/textView7"
-      app:layout_constraintTop_toBottomOf="@+id/textView7" />
 </androidx.constraintlayout.widget.ConstraintLayout>

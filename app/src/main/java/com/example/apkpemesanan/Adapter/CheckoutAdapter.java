@@ -20,11 +20,11 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.ViewHo
     private ManagementCart managementCart;
     public ArrayList<FoodDomain> listFood;
     ChangeNumberItems changeNumberItems;
+
     public CheckoutAdapter(ArrayList<FoodDomain> listFood, Context context, ChangeNumberItems changeNumberItems) {
         this.listFood = listFood;
         managementCart = new ManagementCart(context);
         this.changeNumberItems = changeNumberItems;
-
     }
 
     public ArrayList<FoodDomain> getFoodList() {
@@ -34,20 +34,22 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.ViewHo
     @NonNull
     @Override
     public CheckoutAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_checkout,parent,false);
-
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.viewholder_checkout, parent, false);
         return new ViewHolder(inflate);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CheckoutAdapter.ViewHolder holder, int position) {
+        FoodDomain food = listFood.get(position);
 
-//        holder.title2.setText(listFood.get(position).getTitle());
-//        holder.feeInvoice.setText("Rp." + listFood.get(position).getFee());
-//        holder.stokInvoice.setText(listFood.get(position).getNumberInCart());
-//        holder.total_Invoice.setText("Rp." + Math.round((listFood.get(position).getNumberInCart() * listFood.get(position).getFee())));
+        holder.title2.setText(food.getTitle());
+        holder.feeInvoice.setText("Rp. " + food.getFee());
+        holder.stokInvoice.setText(String.valueOf(food.getNumberInCart()));
 
+        int total = (int) (food.getNumberInCart() * food.getFee());
+        holder.total_Invoice.setText("Rp. " + total);
     }
+
 
     @Override
     public int getItemCount() {
@@ -55,18 +57,14 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView title2, feeInvoice, stokInvoice, total_Invoice;
 
         public ViewHolder(@NonNull View itemview) {
             super(itemview);
-
             title2 = itemview.findViewById(R.id.title2);
             feeInvoice = itemview.findViewById(R.id.feeInvoice);
             stokInvoice = itemview.findViewById(R.id.stokInvoice);
             total_Invoice = itemview.findViewById(R.id.total_invoice);
-
-
         }
     }
 }
