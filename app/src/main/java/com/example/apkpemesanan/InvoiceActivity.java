@@ -69,15 +69,15 @@ public class InvoiceActivity extends AppCompatActivity {
 
     private void fetchInvoiceData() {
         Intent intent = getIntent();
-        String id_transaksi = intent.getStringExtra("id_transaksi");
+        String id_invoice = intent.getStringExtra("id_invoice");
 
-        if (id_transaksi == null) {
-            Log.e("ERROR", "id_transaksi tidak ditemukan");
+        if (id_invoice == null) {
+            Log.e("ERROR", "id_invoice tidak ditemukan");
             return;
         }
 
-        AndroidNetworking.get("http://10.0.2.2:8000/invoice/{id_transaksi}")
-                .addPathParameter("id_transaksi", id_transaksi)
+        AndroidNetworking.get("http://10.0.2.2:8000/invoice/{id_invoice}")
+                .addPathParameter("id_invoice", id_invoice)
                 .setTag("invoice")
                 .setPriority(Priority.MEDIUM)
                 .build()

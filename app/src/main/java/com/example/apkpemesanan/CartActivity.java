@@ -116,7 +116,7 @@ public class CartActivity extends AppCompatActivity {
                                             @Override
                                             public void onResponse(JSONObject res) {
                                                 Log.d("SUCCES", "data berhasil terkirim");
-
+                                                cleardata();
                                             }
 
                                             @Override
@@ -125,10 +125,11 @@ public class CartActivity extends AppCompatActivity {
                                             }
                                         });
                             }
+                            Log.d("API Response", response.toString());
 
                             try {
                                 Intent checkout = new Intent(CartActivity.this, InvoiceActivity.class);
-                                checkout.putExtra("id_transaksi", response.getString("id_transaksi"));
+                                checkout.putExtra("id_invoice", response.getString("id_invoice"));
                                 startActivity(checkout);
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);

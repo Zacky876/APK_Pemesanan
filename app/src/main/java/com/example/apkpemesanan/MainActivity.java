@@ -18,8 +18,13 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.example.apkpemesanan.Adapter.RecommendAdapter;
 import com.example.apkpemesanan.Domain.FoodDomain;
+import com.example.apkpemesanan.Helper.ManagementCart;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
@@ -40,10 +45,14 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<FoodDomain> foodListMinuman = new ArrayList<>();
     private ArrayList<FoodDomain> foodListSnack = new ArrayList<>();
     private ArrayList<FoodDomain> foodListDesert = new ArrayList<>();
-    private TextView txtuser, txtmakanan, txtminuman, txtdesert, txtsnack;
+    private TextView txtuser, txtmakanan, txtminuman, txtdesert, txtsnack, cartBadgeCounter;
     private SearchView searchView;
+    private LinearLayout Lnotif;
+    private Button btnotif;
+
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
+    private ManagementCart managementCart;
 
 
     @Override
@@ -51,9 +60,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        managementCart = new ManagementCart(this);
+
         initview();
         bottomNavigation();
         search();
+        updateCartBadge();
+        cartnotifycation();
 
         txtuser.setText("Hi, " + pref.getString("username", ""));
 
@@ -64,6 +77,32 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewPopular(2, recyclerViewminuman, foodListMinuman);
         recyclerViewPopular(3, recyclerViewsnack, foodListSnack);
         recyclerViewPopular(4, recyclerViewdesert, foodListDesert);
+
+    }
+
+    private void cartnotifycation() {
+        if (managementCart.getTotalItem() > 0) { // Pastikan ada item dalam keranjang
+            Lnotif.setVisibility(View.VISIBLE);
+            Lnotif.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_up));
+
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                Lnotif.clearAnimation();
+                Lnotif.setVisibility(View.GONE);
+            }, 5000);
+
+            Lnotif.setOnClickListener(view -> Lnotif.setVisibility(View.GONE));
+
+            btnotif.setOnClickListener(view -> {
+                startActivity(new Intent(MainActivity.this, CartActivity.class));
+            });
+
+            // Hanya jalankan kembali jika masih ada item di keranjang
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                if (managementCart.getTotalItem() > 0) {
+                    cartnotifycation();
+                }
+            }, 10000);
+        }
     }
 
     private void bottomNavigation() {
@@ -85,9 +124,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-
         });
+    }
 
+    public void updateCartBadge() {
+        SharedPreferences cartPrefs = getSharedPreferences("CART", MODE_PRIVATE);
+        int cartCount = cartPrefs.getInt("cartCount", 0);
+
+        if (cartCount > 0) {
+            cartBadgeCounter.setVisibility(View.VISIBLE);
+            cartBadgeCounter.setText(String.valueOf(cartCount));
+        } else {
+            cartBadgeCounter.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Update the cart badge each time the activity comes to foreground
+        updateCartBadge();
     }
 
     private void recyclerViewPopular(int idcategory, RecyclerView recyclerView,  ArrayList<FoodDomain> foodList) {
@@ -204,12 +260,19 @@ public class MainActivity extends AppCompatActivity {
         txtminuman = findViewById(R.id.txtminuman);
         txtdesert = findViewById(R.id.txtdesert);
         txtsnack = findViewById(R.id.txtsnack);
+
+        Lnotif = findViewById(R.id.Lnotif);
+        btnotif = findViewById(R.id.btnnotif);
+
         searchView = findViewById(R.id.searchview);
+
         recyclerViewMakanan = findViewById(R.id.recyclerViewMakanan);
         recyclerViewminuman = findViewById(R.id.recyclerViewMinuman);
         recyclerViewsnack = findViewById(R.id.recyclerViewSnack);
         recyclerViewdesert = findViewById(R.id.recyclerViewDesert);
         recyclerViewSearch = findViewById(R.id.recyclerViewSearch);
+
+        cartBadgeCounter = findViewById(R.id.cartBadgeCounter);
 
         pref = getSharedPreferences("LOGIN", MODE_PRIVATE);
         editor = pref.edit();

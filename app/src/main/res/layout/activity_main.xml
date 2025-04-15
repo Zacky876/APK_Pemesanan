@@ -218,6 +218,42 @@
         </LinearLayout>
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/Lnotif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@drawable/rounded_bg"
+        android:elevation="10dp"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="10dp"
+        android:animation="@anim/slide_up">
+
+        <TextView
+            android:id="@+id/cartNotificationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item ditambahkan ke keranjang!"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingEnd="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnnotif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lihat Keranjang"
+            android:textSize="14sp"
+            android:background="@drawable/button_bg"
+            android:textColor="#FFFFFF"/>
+    </LinearLayout>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
@@ -297,12 +333,31 @@
                     android:orientation="vertical"
                     android:visibility="visible">
 
-                    <ImageView
-                        android:id="@+id/imageView55"
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/bottom_btn5" />
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/imageView55"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:srcCompat="@drawable/bottom_btn5" />
+
+                        <TextView
+                            android:id="@+id/cartBadgeCounter"
+                            android:layout_width="15dp"
+                            android:layout_height="15dp"
+                            android:layout_gravity="top|end"
+                            android:layout_marginEnd="35dp"
+                            android:background="@drawable/badge_background"
+                            android:gravity="center"
+                            android:text="0"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:visibility="gone"/>
+                    </FrameLayout>
 
                     <TextView
                         android:id="@+id/textView112"
@@ -316,7 +371,6 @@
 
             </LinearLayout>
         </com.google.android.material.bottomappbar.BottomAppBar>
-
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

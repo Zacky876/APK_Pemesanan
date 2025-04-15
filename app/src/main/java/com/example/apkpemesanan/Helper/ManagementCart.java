@@ -18,11 +18,34 @@ public class ManagementCart {
         this.tinyDB = new TinyDB(context);
     }
 
+    public void updateCartCount() {
+        int cartCount = getCartCount();
+        android.content.SharedPreferences cartPrefs = context.getSharedPreferences("CART", android.content.Context.MODE_PRIVATE);
+        android.content.SharedPreferences.Editor editor = cartPrefs.edit();
+        editor.putInt("cartCount", cartCount);
+        editor.apply();
+    }
+
+    public int getCartCount() {
+        ArrayList<FoodDomain> listFood = getListCart();
+        int count = 0;
+        for (FoodDomain item : listFood) {
+            count += item.getNumberInCart();
+        }
+        return count;
+    }
+
+    public int getTotalItem() {
+        return getCartCount();
+    }
+
     public void clearfood() {
         tinyDB.clear();
+        updateCartCount(); // Add this line to reset count when cart is cleared
     }
 
     public void insertfood(FoodDomain item) {
+        // Your existing code
         ArrayList<FoodDomain> listfood = getListCart();
         boolean exxistAlready = false;
         int n = 0;
@@ -40,31 +63,33 @@ public class ManagementCart {
             listfood.add(item);
         }
 
-        tinyDB.putListObject("CardList", listfood);
+        tinyDB.putListObject("CartList", listfood);
+        updateCartCount(); // Add this line
         Log.d("LIST CART", "Isi list: " + getListCart().toString());
-
     }
 
     public ArrayList<FoodDomain> getListCart() {
-    return tinyDB.getListObject("CardList");
+    return tinyDB.getListObject("CartList");
     }
 
     public void minusNumberFood(ArrayList<FoodDomain> listfood, int position, ChangeNumberItems changeNumberItems) {
+        // Your existing code
         if (listfood.get(position).getNumberInCart()==1) {
             listfood.remove(position);
         }else  {
             listfood.get(position).setNumberInCart(listfood.get(position).getNumberInCart()-1);
         }
 
-        tinyDB.putListObject("CardList", listfood);
+        tinyDB.putListObject("CartList", listfood);
+        updateCartCount(); // Add this line
         changeNumberItems.changed();
-
     }
     public void plusNumberFood(ArrayList<FoodDomain> listfood, int position,ChangeNumberItems changeNumberItems ) {
-         listfood.get(position).setNumberInCart(listfood.get(position).getNumberInCart() + 1);
-         tinyDB.putListObject("CardList", listfood);
-         changeNumberItems.changed();
-
+        // Your existing code
+        listfood.get(position).setNumberInCart(listfood.get(position).getNumberInCart() + 1);
+        tinyDB.putListObject("CartList", listfood);
+        updateCartCount(); // Add this line
+        changeNumberItems.changed();
     }
 
     public double getTotalFee() {

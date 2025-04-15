@@ -1,7 +1,9 @@
 package com.example.apkpemesanan.Adapter;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,19 +50,35 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.View
         holder.title.setText(RecommendDomains.get(position).getTitle());
         holder.fee.setText(String.valueOf(RecommendDomains.get(position).getFee()));
 
-
         Picasso.get().load("http://10.0.2.2:8000/gambar?id_gambar=" + RecommendDomains.get(position).getPic()).into(holder.pic);
 
         holder.addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(activity, ShowDetailActivity.class);
                 intent.putExtra("fooddomain", RecommendDomains.get(position));
                 holder.itemView.getContext().startActivity(intent);
             }
         });
     }
+
+    public void addToCart(FoodDomain item) {
+        // Get existing cart items from SharedPreferences
+        SharedPreferences cartPrefs = activity.getSharedPreferences("CART", Context.MODE_PRIVATE);
+        int currentCount = cartPrefs.getInt("cartCount", 0);
+
+        // Increase the count
+        SharedPreferences.Editor editor = cartPrefs.edit();
+        editor.putInt("cartCount", currentCount + 1);
+        editor.apply();
+
+        // Update the cart badge in MainActivity
+        if (activity != null) {
+            activity.updateCartBadge();
+        }
+    }
+
+
     @Override
     public int getItemCount() {
         return RecommendDomains.size();
@@ -80,6 +98,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecommendAdapter.View
             addbtn = itemview.findViewById(R.id.addbtn);
         }
     }
+
     public void updateData(ArrayList<FoodDomain> newData) {
         this.RecommendDomains.clear();
         this.RecommendDomains.addAll(newData);
